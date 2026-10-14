@@ -78,7 +78,7 @@ public class GlobalExceptionHandler {
         String message = ex.getMessage();
         log.error("Database operation failed: {}", message, ex);
 
-        if (message != null && (message.contains("Customer does not exist") || message.contains("Customer not found") || message.contains("Product not found") || message.contains("Category not found") || message.contains("Supplier not found") || message.contains("Product-supplier link not found") || message.contains("Inventory record not found") || message.contains("Active cart not found") || message.contains("Product is not in the cart") || message.contains("Order not found for this customer") || message.contains("Order not found"))) {
+        if (message != null && (message.contains("Customer does not exist") || message.contains("Customer not found") || message.contains("Product not found") || message.contains("Category not found") || message.contains("Supplier not found") || message.contains("Product-supplier link not found") || message.contains("Inventory record not found") || message.contains("Active cart not found") || message.contains("Product is not in the cart") || message.contains("Order not found for this customer") || message.contains("Order not found") || message.contains("Payment record not found") || message.contains("Delivery record not found") || message.contains("Tracking record not found") || message.contains("Review not found") || message.contains("Purchase summary not found"))) {
             String errorMsg = "Resource not found.";
             if (message.contains("Customer does not exist") || message.contains("Customer not found")) errorMsg = "Customer not found.";
             else if (message.contains("Product not found")) errorMsg = "Product not found.";
@@ -88,6 +88,11 @@ public class GlobalExceptionHandler {
             else if (message.contains("Inventory record not found")) errorMsg = "Inventory record not found.";
             else if (message.contains("Active cart not found")) errorMsg = "Active cart not found.";
             else if (message.contains("Product is not in the cart")) errorMsg = "Product is not in the cart.";
+            else if (message.contains("Payment record not found")) errorMsg = "Payment record not found.";
+            else if (message.contains("Delivery record not found")) errorMsg = "Delivery record not found.";
+            else if (message.contains("Tracking record not found")) errorMsg = "Tracking record not found.";
+            else if (message.contains("Review not found")) errorMsg = "Review not found.";
+            else if (message.contains("Purchase summary not found")) errorMsg = "Purchase summary not found.";
             else if (message.contains("Order not found")) errorMsg = "Order not found.";
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -225,6 +230,90 @@ public class GlobalExceptionHandler {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponse.error(message.contains("Invalid payment method") ? "Invalid payment method." : "Payment amount does not match order total."));
+        }
+
+        if (message != null && message.contains("Only successful payments can be refunded")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Only successful payments can be refunded."));
+        }
+
+        if (message != null && message.contains("Only paid or processing orders can be assigned")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Only paid or processing orders can be assigned."));
+        }
+
+        if (message != null && message.contains("Delivered orders cannot be reopened here")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Delivered orders cannot be reopened here."));
+        }
+
+        if (message != null && message.contains("Invalid delivery status")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Invalid delivery status specified."));
+        }
+
+        if (message != null && message.contains("A verified transaction reference is required")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("A verified transaction reference is required."));
+        }
+
+        if (message != null && message.contains("Order is not eligible for payment")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Order is not eligible for payment."));
+        }
+
+        if (message != null && message.contains("Payment amount must be non-negative")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Payment amount must be non-negative."));
+        }
+
+        if (message != null && message.contains("Delivery person name is required")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Delivery person name is required."));
+        }
+
+        if (message != null && message.contains("Delivery phone is required")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Delivery phone is required."));
+        }
+
+        if (message != null && message.contains("Rating must be between 1 and 5")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Rating must be between 1 and 5."));
+        }
+
+        if (message != null && message.contains("A delivered order belonging to this customer is required")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("A delivered order belonging to this customer is required."));
+        }
+
+        if (message != null && message.contains("This product was not found in the specified order")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("This product was not found in the specified order."));
+        }
+
+        if (message != null && message.contains("Review not found or you are not its owner")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Review not found or you are not its owner."));
+        }
+
+        if (message != null && message.contains("Please provide a valid date range")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("Please provide a valid date range."));
         }
 
 
